@@ -15,7 +15,7 @@ Array(s) of colors will be created in the `window.allColors.<site name>.<palette
 
 ### CommonJS
 
-    var colors = require('allColors');
+    var colors = require('all-colors');
     
     console.log(colors.ideaColorThemes.tauCeti); //[ '#295622', '#bbbbbb', '#333333', ... ]
 
@@ -23,7 +23,7 @@ Every color palette array from every site will be created in the `colors.<site n
 
 ### RequireJS
 
-    define(['allColors'], function(colors) {
+    define(['all-colors'], function(colors) {
         console.log(colors.ideaColorThemes.tauCeti); //[ '#295622', '#bbbbbb', '#333333', ... ]
     });
 

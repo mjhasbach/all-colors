@@ -138,12 +138,12 @@ gulp.task('module', function() {
         walk.walkSync(dir, {
             listeners: {
                 file: function(filePath, stats, next) {
-                    var fileName = path.basename(stats.name);
+                    var fileName = path.basename(stats.name, '.js');
 
-                    if (filePath === dir && !_.contains(fileName, 'getColors.js')) {
+                    if (filePath === dir && !_.contains(fileName, 'getColors')) {
                         dependencies.push({
                             name: slash('./' + path.join(path.relative(libPath, filePath), stats.name)),
-                            param: fileName.split('.')[0]
+                            param: fileName
                         });
                     }
 

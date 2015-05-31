@@ -164,7 +164,3 @@ gulp.task('module', function() {
 gulp.task('default', function(cb) {
     runSequence('colors', 'umd', 'site', 'module', cb);
 });
-
-gulp.task('test', function(cb) {
-    runSequence('site', 'module', cb);
-});

@@ -11,7 +11,7 @@ Create a script tag for each color palette that you want to use:
         console.log(window.allColors.ideaColorThemes.tauCeti); //[ '#295622', '#bbbbbb', '#333333', ... ]
     </script>
 
-Array(s) of colors will be created in the `window.allColors.<sitename>.<palette name>` namespace.
+Array(s) of colors will be created in the `window.allColors.<site name>.<palette name>` namespace.
 
 ### CommonJS
 
@@ -19,7 +19,7 @@ Array(s) of colors will be created in the `window.allColors.<sitename>.<palette 
     
     console.log(colors.ideaColorThemes.tauCeti); //[ '#295622', '#bbbbbb', '#333333', ... ]
 
-Every color palette array from every site will be created in the `colors.<sitename>.<palette name>` namespace.
+Every color palette array from every site will be created in the `colors.<site name>.<palette name>` namespace.
 
 ### RequireJS
 
@@ -27,7 +27,7 @@ Every color palette array from every site will be created in the `colors.<sitena
         console.log(colors.ideaColorThemes.tauCeti); //[ '#295622', '#bbbbbb', '#333333', ... ]
     });
 
-Every color palette array from every site will be created in the `colors.<sitename>.<palette name>` namespace.
+Every color palette array from every site will be created in the `colors.<site name>.<palette name>` namespace.
 
 # Installation
 ### Npm

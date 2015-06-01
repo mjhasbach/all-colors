@@ -10,6 +10,7 @@ var _ = require('lodash'),
     shell = require('gulp-shell'),
     modify = require('gulp-modify'),
     rename = require('gulp-rename'),
+    exec = require('child_process').exec,
     release = require('publish-release'),
     eventStream = require('event-stream'),
     runSequence = require('run-sequence'),
@@ -214,10 +215,17 @@ gulp.task('githubRelease', function(cb) {
     });
 });
 
+gulp.task('npmPublish', function(cb) {
+    exec('npm publish', function(err) {
+        if (err) { throw err.message; }
+        cb();
+    });
+});
+
 gulp.task('default', function(cb) {
     runSequence('colors', 'umd', 'site', 'module', cb);
 });
 
 gulp.task('release', function(cb) {
-    runSequence('bump', 'commitBump', 'pushBump', 'githubRelease', cb);
+    runSequence('bump', 'commitBump', 'pushBump', 'githubRelease', 'npmPublish', cb);
 });

@@ -3,10 +3,14 @@ var _ = require('lodash'),
     path = require('path'),
     walk = require('walk'),
     slash = require('slash'),
+    git = require('gulp-git'),
     umd = require('gulp-umd'),
+    prompt = require('prompt'),
+    bump = require('gulp-bump'),
     shell = require('gulp-shell'),
     modify = require('gulp-modify'),
     rename = require('gulp-rename'),
+    release = require('publish-release'),
     eventStream = require('event-stream'),
     runSequence = require('run-sequence'),
     vinylBuffer = require('vinyl-buffer'),
@@ -14,7 +18,8 @@ var _ = require('lodash'),
     source = require('vinyl-source-stream'),
     stringifyObject = require('stringify-object');
 
-var libPath = 'lib',
+var version,
+    libPath = 'lib',
     sitesPath = path.join(libPath, 'sites'),
     createCommonJSAdapterFile = function(dependencies, dir) {
         var code = {},
@@ -161,6 +166,58 @@ gulp.task('module', function() {
     return eventStream.merge.apply(this, files);
 });
 
+gulp.task('bump', function() {
+    return gulp.src('*.json')
+        .pipe(bump())
+        .pipe(gulp.dest('.'));
+});
+
+gulp.task('commitBump', function() {
+    version = require('./package').version;
+
+    return gulp.src('*.json')
+        .pipe(git.commit('Released version ' + version));
+});
+
+gulp.task('pushBump', function(cb) {
+    git.push('origin', 'master', function(err) {
+        if (err) { throw err; }
+        cb();
+    });
+});
+
+gulp.task('githubRelease', function(cb) {
+    var notesKey = 'release notes';
+
+    if (!_.isString(version)) {
+        version = require('./package').version;
+    }
+
+    prompt.start();
+
+    prompt.get([notesKey], function(err, result) {
+        if (err) { throw err; }
+
+        release({
+            token: require('./githubToken.js'),
+            owner: 'mjhasbach',
+            repo: 'all-colors',
+            tag: version,
+            name: 'Version ' + version,
+            notes: result[notesKey],
+            draft: false,
+            prerelease: false
+        }, function(err) {
+            if (err) { throw err; }
+            cb();
+        });
+    });
+});
+
 gulp.task('default', function(cb) {
     runSequence('colors', 'umd', 'site', 'module', cb);
+});
+
+gulp.task('release', function(cb) {
+    runSequence('bump', 'commitBump', 'pushBump', 'githubRelease', cb);
 });
